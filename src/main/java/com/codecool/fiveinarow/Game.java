@@ -1,10 +1,11 @@
 package com.codecool.fiveinarow;
 
 
-
 import java.util.Scanner;
 
 public class Game implements GameInterface {
+
+    private final char BOARD_FILLING = '*';
 
     private final int ROW_IDX = 0;
     private final int COL_IDX = 1;
@@ -21,7 +22,7 @@ public class Game implements GameInterface {
         board = new int[nRows][nCols];
         for ( int row = 0; row < nRows; row++){
             for(int col = 0; col < nCols; col++){
-                board[row][col] = '*';
+                board[row][col] = BOARD_FILLING;
             }
         }
     }
@@ -85,6 +86,13 @@ public class Game implements GameInterface {
     }
 
     public boolean isFull() {
+        for (int[] chars : this.board) {
+            for (int aChar : chars) {
+                if (aChar != BOARD_FILLING) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 

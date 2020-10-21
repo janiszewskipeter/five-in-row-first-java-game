@@ -7,6 +7,5 @@ public class FiveInARow {
         game.enableAi(1);
         game.enableAi(2);
         game.play(5);
-        game.getMove(1);
     }
 }
