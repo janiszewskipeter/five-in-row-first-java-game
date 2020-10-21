@@ -11,8 +11,8 @@ public class Game implements GameInterface {
 
     private int[][] board;
 
-    private int rowNum;
-    private int colNum;
+    private final int rowNum;
+    private final int colNum;
 
     public Game(int nRows, int nCols) {
         // make a board of nRows & nCols
@@ -21,7 +21,7 @@ public class Game implements GameInterface {
         board = new int[nRows][nCols];
         for ( int row = 0; row < nRows; row++){
             for(int col = 0; col < nCols; col++){
-                board[row][col] = 0;
+                board[row][col] = '*';
             }
         }
     }
@@ -74,6 +74,10 @@ public class Game implements GameInterface {
     }
 
     public void mark(int player, int row, int col) {
+        if (player == 1) {
+            this.board[row][col] = 'X';
+        }
+        this.board[row][col] = '0';
     }
 
     public boolean hasWon(int player, int howMany) {
