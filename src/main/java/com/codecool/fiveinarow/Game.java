@@ -7,6 +7,9 @@ public class Game implements GameInterface {
 
     private final char BOARD_FILLING = '*';
 
+    private final char PLAYER_ONE = 'X';
+    private final char PLAYER_TWO = '0';
+
     private final int ROW_IDX = 0;
     private final int COL_IDX = 1;
 
@@ -76,9 +79,9 @@ public class Game implements GameInterface {
 
     public void mark(int player, int row, int col) {
         if (player == 1) {
-            this.board[row][col] = 'X';
+            this.board[row][col] = PLAYER_ONE;
         }
-        this.board[row][col] = '0';
+        this.board[row][col] = PLAYER_TWO;
     }
 
     public boolean hasWon(int player, int howMany) {
