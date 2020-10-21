@@ -43,7 +43,7 @@ public class Game implements GameInterface {
         int[] coords = new int[2];
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Player" + player + "enter Your coordinates:");
+        System.out.println("Player " + player + " enter Your coordinates:");
 
         String userInput = null;
         while (!isFull()){
@@ -52,17 +52,17 @@ public class Game implements GameInterface {
             // checking if input is not too long
             if (userInput.length() > 3){
                 System.out.println("Coordinates too long");
-                System.out.println("Player" + player + "enter Your coordinates:");
+                System.out.println("Player " + player + " enter Your coordinates:");
                 continue;
             // checking if coordinates are inside the board
             } else if (coords[ROW_IDX] > this.rowNum || coords[COL_IDX] > this.colNum) {
                 System.out.println("Coordinates out of the board. Try again");
-                System.out.println("Player" + player + "enter Your coordinates:");
+                System.out.println("Player " + player + " enter Your coordinates:");
                 continue;
             // checking if coordinates are taken
-            } else if (this.board[ROW_IDX][COL_IDX] != 0) {
+            } else if (this.board[ROW_IDX][COL_IDX] != BOARD_FILLING) {
                 System.out.println("Coordinates are taken. Try again");
-                System.out.println("Player" + player + "enter Your coordinates:");
+                System.out.println("Player " + player + " enter Your coordinates:");
                 continue;
             }
             // end if ok
@@ -89,6 +89,7 @@ public class Game implements GameInterface {
     }
 
     public boolean isFull() {
+
         for (int[] chars : this.board) {
             for (int aChar : chars) {
                 if (aChar != BOARD_FILLING) {
@@ -109,6 +110,34 @@ public class Game implements GameInterface {
     }
 
     public void play(int howMany) {
+
+        int game = 0;
+        int currentPlayer = 1;
+        System.out.println("Welcome to Gomoku!\n");
+        while (game < howMany) {
+            System.out.println("Let's start!\n");
+            System.out.println(game + 1 + " attempt out of " + howMany);
+            while (true) {
+                printBoard();
+                int[] newCoords = getMove(currentPlayer);
+                mark(currentPlayer, newCoords[ROW_IDX], newCoords[COL_IDX]);
+                if (hasWon(currentPlayer, howMany)) {
+                    System.out.println("Player " + currentPlayer + " has won! Congratulations!");
+                    System.out.println("Try Again!\n");
+                    currentPlayer = playerSwitch(currentPlayer);
+                    game++;
+                    break;
+                }
+                if (isFull()) {
+                    System.out.println("The board is full.");
+                    System.out.println("Try Again!\n");
+                    currentPlayer = playerSwitch(currentPlayer);
+                    game++;
+                    break;
+                }
+            }
+        }
+        System.out.println("Thanks for the game!");
     }
 
     // added validation method for user input
@@ -126,5 +155,6 @@ public class Game implements GameInterface {
     public int playerSwitch(int player) {
         return player == 1 ? 2: 1;
     }
+
 }
 
