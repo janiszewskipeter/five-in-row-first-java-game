@@ -6,35 +6,23 @@ import java.util.Scanner;
 public class Game implements GameInterface {
     private final Player player1 = new Player("Player 1", 'X');
     private final Player player2 = new Player("Player 2", '0');
+    private final Board board;
 
-    private final char BOARD_FILLING = '*';
-    private final int ROW_IDX = 0;
-    private final int COL_IDX = 1;
-    private final int rowNum;
-    private final int colNum;
-    private char[][] board;
+    // Index constants
+    private final int I_ROW = 0;
+    private final int I_COL = 1;
 
 
     public Game(int nRows, int nCols) {
-
-        rowNum = nRows;
-        colNum = nCols;
-
-        // make a board of nRows & nCols
-        board = new char[nRows][nCols];
-        for ( int row = 0; row < nRows; row++){
-            for(int col = 0; col < nCols; col++){
-                board[row][col] = BOARD_FILLING;
-            }
-        }
+        board = new Board(nRows, nCols, '*');
     }
 
     public char[][] getBoard() {
-        return board;
+        return board.fields;
     }
 
-    public void setBoard(char[][] board) {
-        this.board = board;
+    public void setBoard(char[][] newBoard) {
+        board.fields = newBoard;
     }
 
     public int[] getMove(int player) {
@@ -55,12 +43,12 @@ public class Game implements GameInterface {
                 invalidInput = true;
 
             // checking if coordinates are outside the board
-            } else if (coords[ROW_IDX] > this.rowNum - 1 || coords[COL_IDX] > this.colNum - 1) {
+            } else if (coords[I_ROW] > board.size.rows - 1 || coords[I_COL] > board.size.cols - 1) {
                 System.out.println("Coordinates out of the board. Try again");
                 invalidInput = true;
 
             // checking if coordinates are taken
-            } else if (this.board[coords[ROW_IDX]][coords[COL_IDX]] != BOARD_FILLING) {
+            } else if (board.fields[coords[I_ROW]][coords[I_COL]] != board.emptyField) {
                 System.out.println("Coordinates are taken. Try again");
                 invalidInput = true;
             }
@@ -77,9 +65,9 @@ public class Game implements GameInterface {
 
     public void mark(int player, int row, int col) {
         if (player == 1) {
-            this.board[row][col] = player1.appearance;
+            board.fields[row][col] = player1.appearance;
         } else {
-            this.board[row][col] = player2.appearance;
+            board.fields[row][col] = player2.appearance;
         }
     }
 
@@ -113,9 +101,9 @@ public class Game implements GameInterface {
     }
 
     public boolean isFull() {
-        for (char[] chars : this.board) {
+        for (char[] chars : board.fields) {
             for (char aChar : chars) {
-                if (aChar == BOARD_FILLING) {
+                if (aChar == board.emptyField) {
                     return false;
                 }
             }
@@ -126,19 +114,19 @@ public class Game implements GameInterface {
     public void printBoard() {
         StringBuilder header = new StringBuilder();
         header.append("   ");
-        for (int i_col = 1; i_col < this.colNum + 1; i_col++) {
+        for (int i_col = 1; i_col < board.size.cols + 1; i_col++) {
             header.append(i_col);
             header.append(" ");
         }
         System.out.println(header.toString());
 
-        for (int i_row = 0; i_row < this.rowNum; i_row++) {
+        for (int i_row = 0; i_row < board.size.rows; i_row++) {
             StringBuilder line = new StringBuilder();
 
             line.append((char) (i_row + 65));
             line.append("  ");
-            for (int i_col = 0; i_col < this.colNum; i_col++) {
-                line.append(this.board[i_row][i_col]);
+            for (int i_col = 0; i_col < board.size.cols; i_col++) {
+                line.append(board.fields[i_row][i_col]);
                 line.append(" ");
             }
             System.out.println(line.toString());
@@ -173,7 +161,7 @@ public class Game implements GameInterface {
                 System.out.println(" ");
 
                 int[] newCoords = getMove(currentPlayer);
-                mark(currentPlayer, newCoords[ROW_IDX], newCoords[COL_IDX]);
+                mark(currentPlayer, newCoords[I_ROW], newCoords[I_COL]);
 
                 if (hasWon(currentPlayer, howMany)) {
                     System.out.println("Player " + currentPlayer + " has won! Congratulations!");
@@ -226,5 +214,38 @@ class Player {
         this.name = name;
         this.appearance = appearance;
         this.result = 0;
+    }
+}
+
+
+class Board {
+    char[][] fields;
+    char emptyField;
+    BoardSize size;
+
+    public Board(int nRows, int nCols, char emptyField) {
+        this.emptyField = emptyField;
+        this.size = new BoardSize(nRows, nCols);
+        makeBoard(emptyField);
+    }
+
+    private void makeBoard(char emptyField) {
+        this.fields = new char[size.rows][size.cols];
+        for ( int row = 0; row < size.rows; row++){
+            for(int col = 0; col < size.cols; col++){
+                fields[row][col] = emptyField;
+            }
+        }
+    }
+}
+
+
+class BoardSize {
+    int rows;
+    int cols;
+
+    public BoardSize(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
     }
 }
