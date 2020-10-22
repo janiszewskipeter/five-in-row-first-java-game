@@ -4,7 +4,6 @@ package com.codecool.fiveinarow;
 import java.util.Scanner;
 
 public class Game implements GameInterface {
-
     private int resultsPlayerOne = 0;
     private int resultsPlayerTwo = 0;
 
@@ -42,14 +41,14 @@ public class Game implements GameInterface {
     }
 
     public int[] getMove(int player) {
-        int[] coords = new int[2];
+        int[] coords;
 
         Scanner scanner = new Scanner(System.in);
         String userInput;
 
         boolean invalidInput = false;
         do {
-            System.out.println("Player " + player + " enter Your coordinates:");
+            System.out.println("Player " + player + " coordinates:");
             userInput = scanner.nextLine();
 
             coords = validateInput(userInput);
@@ -58,12 +57,12 @@ public class Game implements GameInterface {
                 System.out.println("Coordinates too long");
                 invalidInput = true;
 
-                // checking if coordinates are inside the board
+            // checking if coordinates are outside the board
             } else if (coords[ROW_IDX] > this.rowNum - 1 || coords[COL_IDX] > this.colNum - 1) {
                 System.out.println("Coordinates out of the board. Try again");
                 invalidInput = true;
 
-                // checking if coordinates are taken
+            // checking if coordinates are taken
             } else if (this.board[coords[ROW_IDX]][coords[COL_IDX]] != BOARD_FILLING) {
                 System.out.println("Coordinates are taken. Try again");
                 invalidInput = true;
@@ -88,37 +87,35 @@ public class Game implements GameInterface {
     }
 
     public boolean hasWon(int player, int howMany) {
-
-        char playerField;
-
-        if (player == 1) {
-            playerField = PLAYER_ONE;
-        } else {
-            playerField = PLAYER_TWO;
-        }
+//        char playerField;
+//
+//        if (player == 1) {
+//            playerField = PLAYER_ONE;
+//        } else {
+//            playerField = PLAYER_TWO;
+//        }
 
         int counter = 0;
-        for (int i = 0; i < rowNum; i++) {
-            for (int j = 0; j < colNum; j++) {
-                if (this.board[i][j] == playerField) {
-
-                    boolean ownField = false;
-                    do {
-                        if (this.board[i][j + 1] == playerField) {
-                            counter++;
-                            ownField = true;
-                        } else {
-                            ownField = false;
-                        }
-                    } while (ownField);
-                }
-            }
-        }
+//        for (int i = 0; i < rowNum; i++) {
+//            for (int j = 0; j < colNum; j++) {
+//                if (this.board[i][j] == playerField) {
+//
+//                    boolean ownField = false;
+//                    do {
+//                        if (this.board[i][j + 1] == playerField) {
+//                            counter++;
+//                            ownField = true;
+//                        } else {
+//                            ownField = false;
+//                        }
+//                    } while (ownField);
+//                }
+//            }
+//        }
         return counter == howMany;
     }
 
     public boolean isFull() {
-
         for (char[] chars : this.board) {
             for (char aChar : chars) {
                 if (aChar == BOARD_FILLING) {
@@ -152,7 +149,6 @@ public class Game implements GameInterface {
     }
 
     public void printResult(int player) {
-
         if (player == 1) {
             resultsPlayerOne++;
         } else {
@@ -166,40 +162,47 @@ public class Game implements GameInterface {
     }
 
     public void play(int howMany) {
-
         int game = 0;
         int currentPlayer = 1;
+
         System.out.println("Welcome to Gomoku!\n");
-        while (game < howMany) {
-            System.out.println("Let's start!\n");
-            System.out.println(game + 1 + " attempt out of " + howMany);
-            while (true) {
+        System.out.println("Let's start!\n");
+        do {  // Loop for multiple games.
+            System.out.println(game + 1 + " attempt out of " + howMany + "\n");
+
+            boolean runGame = true;
+            do {  // Loop for actual game.
                 printBoard();
+                System.out.println(" ");
+
                 int[] newCoords = getMove(currentPlayer);
                 mark(currentPlayer, newCoords[ROW_IDX], newCoords[COL_IDX]);
+
                 if (hasWon(currentPlayer, howMany)) {
                     System.out.println("Player " + currentPlayer + " has won! Congratulations!");
-                    System.out.println("Try Again!\n");
-                    currentPlayer = playerSwitch(currentPlayer);
-                    game++;
-                    break;
+                    runGame = false;
                 }
+
                 if (isFull()) {
                     System.out.println("The board is full.");
                     System.out.println("Try Again!\n");
-                    currentPlayer = playerSwitch(currentPlayer);
-                    game++;
-                    break;
+                    runGame = false;
                 }
-                printResult(currentPlayer);
                 currentPlayer = playerSwitch(currentPlayer);
-            }
-        }
+
+            } while (runGame);
+
+            // The game is over.
+            printResult(currentPlayer);
+            currentPlayer = playerSwitch(currentPlayer);
+            game++;
+
+        } while (game < howMany);
+
         System.out.println("Thanks for the game!");
     }
 
-    // added validation method for user input
-    public int[] validateInput(String inputUser){
+    private int[] validateInput(String inputUser){
         // if it has two elements
 
         String str = inputUser.substring(0, 1).toUpperCase(); // take out first element ex. A and make it upperCase
@@ -210,7 +213,7 @@ public class Game implements GameInterface {
         return new int[] { row, col };
     }
 
-    public int playerSwitch(int player) {
+    private int playerSwitch(int player) {
         return player == 1 ? 2: 1;
     }
 
