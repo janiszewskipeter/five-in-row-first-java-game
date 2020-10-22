@@ -39,36 +39,36 @@ public class Game implements GameInterface {
     }
 
     public int[] getMove(int player) {
-
         int[] coords = new int[2];
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Player " + player + " enter Your coordinates:");
+        String userInput;
 
-        String userInput = null;
-        while (!isFull()){
+        boolean invalidInput = false;
+
+        do {
+            System.out.println("Player " + player + " enter Your coordinates:");
             userInput = scanner.nextLine();
+
             coords = validateInput(userInput);
             // checking if input is not too long
-            if (userInput.length() > 3){
+            if (userInput.length() > 3) {
                 System.out.println("Coordinates too long");
-                System.out.println("Player " + player + " enter Your coordinates:");
-                continue;
-            // checking if coordinates are inside the board
+                invalidInput = true;
+
+                // checking if coordinates are inside the board
             } else if (coords[ROW_IDX] > this.rowNum || coords[COL_IDX] > this.colNum) {
                 System.out.println("Coordinates out of the board. Try again");
-                System.out.println("Player " + player + " enter Your coordinates:");
-                continue;
-            // checking if coordinates are taken
+                invalidInput = true;
+
+                // checking if coordinates are taken
             } else if (this.board[ROW_IDX][COL_IDX] != BOARD_FILLING) {
                 System.out.println("Coordinates are taken. Try again");
-                System.out.println("Player " + player + " enter Your coordinates:");
-                continue;
+                invalidInput = true;
             }
-            // end if ok
-            break;
-        }
-        scanner.close();
+        } while (invalidInput);
+
+//        scanner.close();
 
         return coords;
     }
@@ -92,12 +92,12 @@ public class Game implements GameInterface {
 
         for (int[] chars : this.board) {
             for (int aChar : chars) {
-                if (aChar != BOARD_FILLING) {
-                    return true;
+                if (aChar == BOARD_FILLING) {
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
     public void printBoard() {
@@ -135,6 +135,7 @@ public class Game implements GameInterface {
                     game++;
                     break;
                 }
+                currentPlayer = playerSwitch(currentPlayer);
             }
         }
         System.out.println("Thanks for the game!");
