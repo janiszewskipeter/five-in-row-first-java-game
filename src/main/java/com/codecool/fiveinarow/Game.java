@@ -110,12 +110,11 @@ public class Game implements GameInterface {
 
         if (player == 1) {
             resultsPlayerOne++;
-
         } else {
             resultsPlayerTwo++;
         }
 
-        System.out.println("Current results: Player 1 -> " + resultsPlayerOne + " points, Player 2 -> " + resultsPlayerTwo + " points");
+        System.out.println("Current results: Player 1 -> " + resultsPlayerOne + " points, Player 2 -> " + resultsPlayerTwo + " points\n");
     }
 
     public void enableAi(int player) {
@@ -149,6 +148,8 @@ public class Game implements GameInterface {
                     break;
                 }
                 currentPlayer = playerSwitch(currentPlayer);
+                resultsPlayerOne = 0;
+                resultsPlayerTwo = 0;
             }
         }
         System.out.println("Thanks for the game!");
