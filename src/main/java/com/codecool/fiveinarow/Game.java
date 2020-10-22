@@ -123,6 +123,7 @@ public class Game implements GameInterface {
             if (!runGame) {  // The game is over.
                 printResult(currentPlayer);
                 currentPlayer = playerSwitch(currentPlayer);
+                board.reset();
                 game++;
             }
 
@@ -134,32 +135,31 @@ public class Game implements GameInterface {
     }
 
     public boolean hasWon(int player, int howMany) {
-//        char playerField;
-//
-//        if (player == 1) {
-//            playerField = PLAYER_ONE;
-//        } else {
-//            playerField = PLAYER_TWO;
-//        }
+        char playerField;
 
-        int counter = 0;
-//        for (int i = 0; i < rowNum; i++) {
-//            for (int j = 0; j < colNum; j++) {
-//                if (this.board[i][j] == playerField) {
-//
-//                    boolean ownField = false;
-//                    do {
-//                        if (this.board[i][j + 1] == playerField) {
-//                            counter++;
-//                            ownField = true;
-//                        } else {
-//                            ownField = false;
-//                        }
-//                    } while (ownField);
-//                }
-//            }
-//        }
-        return counter == howMany;
+        if (player == 1) {
+            playerField = player1.appearance;
+        } else {
+            playerField = player2.appearance;
+        }
+
+        int counter = 1;
+        for (int row = 0; row < board.size.rows; row++) {
+            for (int col = 0; col < board.size.cols; col++) {
+                if (board.fields[row][col] == playerField) {
+                    boolean ownField;
+                    do {
+                        if (col + counter < board.size.cols && board.fields[row][col + counter] == playerField) {
+                            counter++;
+                            ownField = true;
+                        } else {
+                            ownField = false;
+                        }
+                    } while (ownField);
+                }
+            }
+        }
+        return counter == 5;
     }
 
     public boolean isFull() {
@@ -252,6 +252,10 @@ class Board {
         this.emptyField = emptyField;
         this.size = new BoardSize(nRows, nCols);
         makeBoard(emptyField);
+    }
+
+    public void reset() {
+        makeBoard(this.emptyField);
     }
 
     private void makeBoard(char emptyField) {
