@@ -13,7 +13,7 @@ public class Game implements GameInterface {
     private final int ROW_IDX = 0;
     private final int COL_IDX = 1;
 
-    private int[][] board;
+    private char[][] board;
 
     private final int rowNum;
     private final int colNum;
@@ -22,7 +22,7 @@ public class Game implements GameInterface {
         // make a board of nRows & nCols
         rowNum = nRows;
         colNum = nCols;
-        board = new int[nRows][nCols];
+        board = new char[nRows][nCols];
         for ( int row = 0; row < nRows; row++){
             for(int col = 0; col < nCols; col++){
                 board[row][col] = BOARD_FILLING;
@@ -30,11 +30,11 @@ public class Game implements GameInterface {
         }
     }
 
-    public int[][] getBoard() {
+    public char[][] getBoard() {
         return board;
     }
 
-    public void setBoard(int[][] board) {
+    public void setBoard(char[][] board) {
         this.board = board;
     }
 
@@ -45,7 +45,6 @@ public class Game implements GameInterface {
         String userInput;
 
         boolean invalidInput = false;
-
         do {
             System.out.println("Player " + player + " enter Your coordinates:");
             userInput = scanner.nextLine();
@@ -90,8 +89,8 @@ public class Game implements GameInterface {
 
     public boolean isFull() {
 
-        for (int[] chars : this.board) {
-            for (int aChar : chars) {
+        for (char[] chars : this.board) {
+            for (char aChar : chars) {
                 if (aChar == BOARD_FILLING) {
                     return false;
                 }

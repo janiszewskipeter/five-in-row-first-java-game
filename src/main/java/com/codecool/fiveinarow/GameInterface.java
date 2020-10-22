@@ -4,8 +4,8 @@ package com.codecool.fiveinarow;
 
 
 public interface GameInterface {
-    void setBoard(int[][] board);
-    int[][] getBoard();
+    void setBoard(char[][] board);
+    char[][] getBoard();
 
     int[] getMove(int player);
     int[] getAiMove(int player);
