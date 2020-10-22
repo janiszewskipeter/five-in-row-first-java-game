@@ -14,7 +14,7 @@ public class Game implements GameInterface {
 
 
     public Game(int nRows, int nCols) {
-        board = new Board(nRows, nCols, '*');
+        board = new Board(nRows, nCols, '.');
     }
 
     public char[][] getBoard() {
@@ -151,9 +151,19 @@ public class Game implements GameInterface {
                     do {
                         if (
                             // Horizontal
-                            col + counter < board.size.cols && board.fields[row][col + counter] == playerField ||
+                            col + counter < board.size.cols &&
+                            board.fields[row][col + counter] == playerField ||
                             // Vertical
-                            row + counter < board.size.rows && board.fields[row + counter][col] == playerField
+                            row + counter < board.size.rows &&
+                            board.fields[row + counter][col] == playerField ||
+                            // From top left to buttom right
+                            col + counter < board.size.cols &&
+                            row + counter < board.size.rows &&
+                            board.fields[row + counter][col + counter] == playerField ||
+                            // From top right to buttom left
+                            col - counter > 0 &&
+                            row - counter < board.size.rows &&
+                            board.fields[row - counter][col - counter] == playerField
                         ) {
                             counter++;
                             ownField = true;
