@@ -100,6 +100,25 @@ public class Game implements GameInterface {
     }
 
     public void printBoard() {
+        StringBuilder header = new StringBuilder();
+        header.append("   ");
+        for (int i_col = 0; i_col < this.colNum; i_col++) {
+            header.append(i_col);
+            header.append(" ");
+        }
+        System.out.println(header.toString());
+
+        for (int i_row = 0; i_row < this.rowNum; i_row++) {
+            StringBuilder line = new StringBuilder();
+
+            line.append((char) (i_row + 65));
+            line.append("  ");
+            for (int i_col = 0; i_col < this.colNum; i_col++) {
+                line.append(this.board[i_row][i_col]);
+                line.append(" ");
+            }
+            System.out.println(line.toString());
+        }
     }
 
     public void printResult(int player) {
