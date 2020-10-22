@@ -66,6 +66,9 @@ public class Game implements GameInterface {
             } else if (board.fields[coords[I_ROW]][coords[I_COL]] != board.emptyField) {
                 System.out.println("Coordinates are taken. Try again");
                 invalidInput = true;
+
+            } else {
+                invalidInput = false;
             }
         } while (invalidInput);
 
