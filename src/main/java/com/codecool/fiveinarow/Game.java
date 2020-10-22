@@ -25,6 +25,21 @@ public class Game implements GameInterface {
         board.fields = newBoard;
     }
 
+    public void enableAi(int player) {
+    }
+
+    public int[] getAiMove(int player) {
+        return null;
+    }
+
+    public void mark(int player, int row, int col) {
+        if (player == 1) {
+            board.fields[row][col] = player1.appearance;
+        } else {
+            board.fields[row][col] = player2.appearance;
+        }
+    }
+
     public int[] getMove(int player) {
         int[] coords;
 
@@ -59,16 +74,45 @@ public class Game implements GameInterface {
         return coords;
     }
 
-    public int[] getAiMove(int player) {
-        return null;
-    }
+    public void play(int howMany) {
+        int game = 0;
+        int currentPlayer = 1;
 
-    public void mark(int player, int row, int col) {
-        if (player == 1) {
-            board.fields[row][col] = player1.appearance;
-        } else {
-            board.fields[row][col] = player2.appearance;
-        }
+        System.out.println("Welcome to Gomoku!\n");
+        System.out.println("Let's start!\n");
+        do {  // Loop for multiple games.
+            System.out.println(game + 1 + " attempt out of " + howMany + "\n");
+
+            boolean runGame = true;
+            do {  // Loop for actual game.
+                printBoard();
+                System.out.println(" ");
+
+                int[] newCoords = getMove(currentPlayer);
+                mark(currentPlayer, newCoords[I_ROW], newCoords[I_COL]);
+
+                if (hasWon(currentPlayer, howMany)) {
+                    System.out.println("Player " + currentPlayer + " has won! Congratulations!");
+                    runGame = false;
+                }
+
+                if (isFull()) {
+                    System.out.println("The board is full.");
+                    System.out.println("Try Again!\n");
+                    runGame = false;
+                }
+                currentPlayer = playerSwitch(currentPlayer);
+
+            } while (runGame);
+
+            // The game is over.
+            printResult(currentPlayer);
+            currentPlayer = playerSwitch(currentPlayer);
+            game++;
+
+        } while (game < howMany);
+
+        System.out.println("Thanks for the game!");
     }
 
     public boolean hasWon(int player, int howMany) {
@@ -141,50 +185,6 @@ public class Game implements GameInterface {
         }
 
         System.out.println("Current results: Player 1 -> " + player1.result + " points, Player 2 -> " + player2.result + " points\n");
-    }
-
-    public void enableAi(int player) {
-    }
-
-    public void play(int howMany) {
-        int game = 0;
-        int currentPlayer = 1;
-
-        System.out.println("Welcome to Gomoku!\n");
-        System.out.println("Let's start!\n");
-        do {  // Loop for multiple games.
-            System.out.println(game + 1 + " attempt out of " + howMany + "\n");
-
-            boolean runGame = true;
-            do {  // Loop for actual game.
-                printBoard();
-                System.out.println(" ");
-
-                int[] newCoords = getMove(currentPlayer);
-                mark(currentPlayer, newCoords[I_ROW], newCoords[I_COL]);
-
-                if (hasWon(currentPlayer, howMany)) {
-                    System.out.println("Player " + currentPlayer + " has won! Congratulations!");
-                    runGame = false;
-                }
-
-                if (isFull()) {
-                    System.out.println("The board is full.");
-                    System.out.println("Try Again!\n");
-                    runGame = false;
-                }
-                currentPlayer = playerSwitch(currentPlayer);
-
-            } while (runGame);
-
-            // The game is over.
-            printResult(currentPlayer);
-            currentPlayer = playerSwitch(currentPlayer);
-            game++;
-
-        } while (game < howMany);
-
-        System.out.println("Thanks for the game!");
     }
 
     private int[] validateInput(String inputUser){
