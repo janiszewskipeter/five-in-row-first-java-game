@@ -149,7 +149,12 @@ public class Game implements GameInterface {
                 if (board.fields[row][col] == playerField) {
                     boolean ownField;
                     do {
-                        if (col + counter < board.size.cols && board.fields[row][col + counter] == playerField) {
+                        if (
+                            // Horizontal
+                            col + counter < board.size.cols && board.fields[row][col + counter] == playerField ||
+                            // Vertical
+                            row + counter < board.size.rows && board.fields[row + counter][col] == playerField
+                        ) {
                             counter++;
                             ownField = true;
                         } else {
