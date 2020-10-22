@@ -41,24 +41,29 @@ public class Game implements GameInterface {
     }
 
     public int[] getMove(int player) {
-        int[] coords;
+        int[] coords = new int[]{0, 0};
 
         Scanner scanner = new Scanner(System.in);
         String userInput;
 
-        boolean invalidInput = false;
+        boolean invalidInput;
         do {
             System.out.println("Player " + player + " coordinates:");
             userInput = scanner.nextLine();
 
-            coords = validateInput(userInput);
-            // checking if input is not too long
-            if (userInput.length() > 3) {
-                System.out.println("Coordinates too long");
+            // Quit from game.
+            if (userWantEndOfGame(userInput)) return null;
+
+            if (!validateInput(userInput)) {
+                System.out.println("Invlid coordinates! Try agan");
                 invalidInput = true;
+                continue;
+            }
+
+            coords = getCoords(userInput);
 
             // checking if coordinates are outside the board
-            } else if (coords[I_ROW] > board.size.rows - 1 || coords[I_COL] > board.size.cols - 1) {
+            if (coords[I_ROW] > board.size.rows - 1 || coords[I_COL] > board.size.cols - 1) {
                 System.out.println("Coordinates out of the board. Try again");
                 invalidInput = true;
 
@@ -78,20 +83,27 @@ public class Game implements GameInterface {
     }
 
     public void play(int howMany) {
-        int game = 0;
+        int game = 1;
         int currentPlayer = 1;
+        int[] newCoords;
+        boolean quitGame = false;
 
         System.out.println("Welcome to Gomoku!\n");
         System.out.println("Let's start!\n");
         do {  // Loop for multiple games.
-            System.out.println(game + 1 + " attempt out of " + howMany + "\n");
+            System.out.println(game + " attempt out of " + howMany + "\n");
 
             boolean runGame = true;
             do {  // Loop for actual game.
                 printBoard();
                 System.out.println(" ");
 
-                int[] newCoords = getMove(currentPlayer);
+                newCoords = getMove(currentPlayer);
+                if (newCoords == null) {  // user wants to quit the game
+                    quitGame = true;
+                    break;
+                }
+
                 mark(currentPlayer, newCoords[I_ROW], newCoords[I_COL]);
 
                 if (hasWon(currentPlayer, howMany)) {
@@ -108,10 +120,13 @@ public class Game implements GameInterface {
 
             } while (runGame);
 
-            // The game is over.
-            printResult(currentPlayer);
-            currentPlayer = playerSwitch(currentPlayer);
-            game++;
+            if (!runGame) {  // The game is over.
+                printResult(currentPlayer);
+                currentPlayer = playerSwitch(currentPlayer);
+                game++;
+            }
+
+            if (quitGame) break;
 
         } while (game < howMany);
 
@@ -190,11 +205,18 @@ public class Game implements GameInterface {
         System.out.println("Current results: Player 1 -> " + player1.result + " points, Player 2 -> " + player2.result + " points\n");
     }
 
-    private int[] validateInput(String inputUser){
-        // if it has two elements
+    private boolean userWantEndOfGame(String userInput) {
+        return userInput.toLowerCase().equals("quit") || userInput.toLowerCase().equals("exit");
+    }
 
-        String str = inputUser.substring(0, 1).toUpperCase(); // take out first element ex. A and make it upperCase
-        int col = Integer.parseInt(inputUser.substring(1)) - 1; // take out second numbers ex. 11
+    private boolean validateInput(String userInput){
+        // One letter and one or two numbers.
+        return userInput.matches("^[A-Za-z][0-9][0-9]?$");
+    }
+
+    private int[] getCoords(String userInput){
+        String str = userInput.substring(0, 1).toUpperCase(); // take out first element ex. A and make it upperCase
+        int col = Integer.parseInt(userInput.substring(1)) - 1; // take out second numbers ex. 11
         char rowAsChar = str.charAt(0);
         int row = rowAsChar - 65;
 
