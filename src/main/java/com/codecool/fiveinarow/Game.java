@@ -5,6 +5,9 @@ import java.util.Scanner;
 
 public class Game implements GameInterface {
 
+    private int resultsPlayerOne = 0;
+    private int resultsPlayerTwo = 0;
+
     private final char BOARD_FILLING = '*';
 
     private final char PLAYER_ONE = 'X';
@@ -104,6 +107,15 @@ public class Game implements GameInterface {
     }
 
     public void printResult(int player) {
+
+        if (player == 1) {
+            resultsPlayerOne++;
+
+        } else {
+            resultsPlayerTwo++;
+        }
+
+        System.out.println("Current results: Player 1 -> " + resultsPlayerOne + " points, Player 2 -> " + resultsPlayerTwo + " points");
     }
 
     public void enableAi(int player) {
@@ -121,6 +133,7 @@ public class Game implements GameInterface {
                 printBoard();
                 int[] newCoords = getMove(currentPlayer);
                 mark(currentPlayer, newCoords[ROW_IDX], newCoords[COL_IDX]);
+                printResult(currentPlayer);
                 if (hasWon(currentPlayer, howMany)) {
                     System.out.println("Player " + currentPlayer + " has won! Congratulations!");
                     System.out.println("Try Again!\n");
