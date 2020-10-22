@@ -4,26 +4,23 @@ package com.codecool.fiveinarow;
 import java.util.Scanner;
 
 public class Game implements GameInterface {
-    private int resultsPlayerOne = 0;
-    private int resultsPlayerTwo = 0;
+    private final Player player1 = new Player("Player 1", 'X');
+    private final Player player2 = new Player("Player 2", '0');
 
     private final char BOARD_FILLING = '*';
-
-    private final char PLAYER_ONE = 'X';
-    private final char PLAYER_TWO = '0';
-
     private final int ROW_IDX = 0;
     private final int COL_IDX = 1;
-
-    private char[][] board;
-
     private final int rowNum;
     private final int colNum;
+    private char[][] board;
+
 
     public Game(int nRows, int nCols) {
-        // make a board of nRows & nCols
+
         rowNum = nRows;
         colNum = nCols;
+
+        // make a board of nRows & nCols
         board = new char[nRows][nCols];
         for ( int row = 0; row < nRows; row++){
             for(int col = 0; col < nCols; col++){
@@ -80,9 +77,9 @@ public class Game implements GameInterface {
 
     public void mark(int player, int row, int col) {
         if (player == 1) {
-            this.board[row][col] = PLAYER_ONE;
+            this.board[row][col] = player1.appearance;
         } else {
-            this.board[row][col] = PLAYER_TWO;
+            this.board[row][col] = player2.appearance;
         }
     }
 
@@ -150,12 +147,12 @@ public class Game implements GameInterface {
 
     public void printResult(int player) {
         if (player == 1) {
-            resultsPlayerOne++;
+            player1.result++;
         } else {
-            resultsPlayerTwo++;
+            player2.result++;
         }
 
-        System.out.println("Current results: Player 1 -> " + resultsPlayerOne + " points, Player 2 -> " + resultsPlayerTwo + " points\n");
+        System.out.println("Current results: Player 1 -> " + player1.result + " points, Player 2 -> " + player2.result + " points\n");
     }
 
     public void enableAi(int player) {
@@ -219,3 +216,15 @@ public class Game implements GameInterface {
 
 }
 
+
+class Player {
+    String name;
+    char appearance;
+    int result;
+
+    public Player(String name, char appearance) {
+        this.name = name;
+        this.appearance = appearance;
+        this.result = 0;
+    }
+}
