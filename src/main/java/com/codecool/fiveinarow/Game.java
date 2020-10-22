@@ -5,6 +5,9 @@ import java.util.Scanner;
 
 public class Game implements GameInterface {
 
+    private int resultsPlayerOne = 0;
+    private int resultsPlayerTwo = 0;
+
     private final char BOARD_FILLING = '*';
 
     private final char PLAYER_ONE = 'X';
@@ -56,12 +59,12 @@ public class Game implements GameInterface {
                 invalidInput = true;
 
                 // checking if coordinates are inside the board
-            } else if (coords[ROW_IDX] > this.rowNum || coords[COL_IDX] > this.colNum) {
+            } else if (coords[ROW_IDX] > this.rowNum - 1 || coords[COL_IDX] > this.colNum - 1) {
                 System.out.println("Coordinates out of the board. Try again");
                 invalidInput = true;
 
                 // checking if coordinates are taken
-            } else if (this.board[ROW_IDX][COL_IDX] != BOARD_FILLING) {
+            } else if (this.board[coords[ROW_IDX]][coords[COL_IDX]] != BOARD_FILLING) {
                 System.out.println("Coordinates are taken. Try again");
                 invalidInput = true;
             }
@@ -79,12 +82,39 @@ public class Game implements GameInterface {
     public void mark(int player, int row, int col) {
         if (player == 1) {
             this.board[row][col] = PLAYER_ONE;
+        } else {
+            this.board[row][col] = PLAYER_TWO;
         }
-        this.board[row][col] = PLAYER_TWO;
     }
 
     public boolean hasWon(int player, int howMany) {
-        return false;
+
+        char playerField;
+
+        if (player == 1) {
+            playerField = PLAYER_ONE;
+        } else {
+            playerField = PLAYER_TWO;
+        }
+
+        int counter = 0;
+        for (int i = 0; i < rowNum; i++) {
+            for (int j = 0; j < colNum; j++) {
+                if (this.board[i][j] == playerField) {
+
+                    boolean ownField = false;
+                    do {
+                        if (this.board[i][j + 1] == playerField) {
+                            counter++;
+                            ownField = true;
+                        } else {
+                            ownField = false;
+                        }
+                    } while (ownField);
+                }
+            }
+        }
+        return counter == howMany;
     }
 
     public boolean isFull() {
@@ -102,7 +132,7 @@ public class Game implements GameInterface {
     public void printBoard() {
         StringBuilder header = new StringBuilder();
         header.append("   ");
-        for (int i_col = 0; i_col < this.colNum; i_col++) {
+        for (int i_col = 1; i_col < this.colNum + 1; i_col++) {
             header.append(i_col);
             header.append(" ");
         }
@@ -122,6 +152,14 @@ public class Game implements GameInterface {
     }
 
     public void printResult(int player) {
+
+        if (player == 1) {
+            resultsPlayerOne++;
+        } else {
+            resultsPlayerTwo++;
+        }
+
+        System.out.println("Current results: Player 1 -> " + resultsPlayerOne + " points, Player 2 -> " + resultsPlayerTwo + " points\n");
     }
 
     public void enableAi(int player) {
@@ -153,6 +191,7 @@ public class Game implements GameInterface {
                     game++;
                     break;
                 }
+                printResult(currentPlayer);
                 currentPlayer = playerSwitch(currentPlayer);
             }
         }
