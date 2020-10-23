@@ -161,9 +161,9 @@ public class Game implements GameInterface {
                             row + counter < board.size.rows &&
                             board.fields[row + counter][col + counter] == playerField ||
                             // From top right to buttom left
-                            col - counter > 0 &&
-                            row - counter < board.size.rows &&
-                            board.fields[row - counter][col - counter] == playerField
+                            col - counter >= 0 &&
+                            row + counter < board.size.rows &&
+                            board.fields[row + counter][col - counter] == playerField
                         ) {
                             counter++;
                             ownField = true;
